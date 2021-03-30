@@ -20,10 +20,11 @@
     </div>
 
     <h2 id = "expert-rating">Expert Rating: </h2>
-
+    <h2 id = "user-rating">User Rating: </h2>
     <form id = "comment-form" data-id = "Insert Oreo Id">
-        <input type = "text" id = "name" name = "name" value = "Name">
-        <input type = "text" id = "comment" name = "comment" value = "Comment">
+        <input type = "text" id = "name" name = "name" placeholder = "Name">
+        <input type = "text" id = "comment" name = "comment" placeholder = "Comment">
+        <input type = "number" id = "rating" name = "rating" min = "1" max = "10">
         <input type = "submit" value = "Post">
     </form>
     <div id="comment-container">
