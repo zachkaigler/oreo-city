@@ -1,3 +1,4 @@
+// Stable elements
 let oreoBar = document.querySelector("div#oreo-header.header")
 let oreoMainImg = document.querySelector("img#placeholder-img")
 let commentForm = document.querySelector("form#comment-form")
@@ -7,9 +8,12 @@ let nameValue= document.querySelector("input#name")
 let commentList = document.querySelector("ul#comment-list")
 let userRating = document.querySelector("input#rating")
 let averageUserRating = document.querySelector("h2#user-rating")
+
+// Global Variables
 let currentOreo = {}
 let sum = 0
 
+// Initial DOM population w/ click functionality
 fetch("http://localhost:3000/oreos?_embed=comments")
     .then(resp => resp.json())
     .then(function(oreoArray) {
@@ -23,60 +27,92 @@ fetch("http://localhost:3000/oreos?_embed=comments")
             oreoSpan.append(oreoImg)
             oreoBar.append(oreoSpan)
 
+            // Click functionality
             oreoImg.addEventListener("click", function() {
-                sum = 0
                 oreoMainImg.src = oreoObj.image
                 oreoMainImg.alt = oreoObj.flavor
                 commentForm.dataset.id = oreoObj.id
                 expertRatingH2.innerText = `Expert Rating: ${oreoObj.expertRating}`
                 currentOreo = oreoObj
                 commentList.innerHTML = ""
-                oreoObj.comments.forEach(function(comment){
+                
+                if (oreoObj.avgRating !== 0) {
+                    averageUserRating.innerText = `User Rating: ${oreoObj.avgRating.toFixed(1)}`
+                    oreoObj.comments.forEach(function(commentObj){
+                        makeAnOreoComment(commentObj)
+                    })
+                } else {
+                    averageUserRating.innerText = `User Rating: N/A`
+                }
+            })
+        })
+    })
+
+// Form submit functionality
+commentForm.addEventListener("submit", function(evt){
+    evt.preventDefault()
+    let ID = currentOreo.id
+    fetch(`http://localhost:3000/comments`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            oreoId: ID,
+            name: nameValue.value,
+            comment: commentValue.value,
+            rating: userRating.value
+        })
+    })
+    .then(res => res.json())
+    .then(function(newCommentObj){
+        // Calculate average user score and update server + DOM
+        fetch('http://localhost:3000/oreos?_embed=comments')
+            .then (resp => resp.json())
+            .then (function(oreosArray) {
+                sum = 0
+                oreosArray[newCommentObj.oreoId - 1].comments.forEach(function(comment) {
                     sum = sum + parseInt(comment.rating, 10)
                 })
-                let average = sum / oreoObj.comments.length
-                average = average.toFixed(1)
-                averageUserRating.innerText = `User Rating: ${average}`
-                oreoObj.comments.forEach(function(commentObj){
-                    makeAnOreoComment(commentObj)
+                
+                fetch (`http://localhost:3000/oreos/${newCommentObj.oreoId}`, {
+                    method: "PATCH",
+                    headers: {
+                        'content-type': 'application/json' 
+                    },
+                    body: JSON.stringify({
+                        avgRating: sum / oreosArray[newCommentObj.oreoId - 1].comments.length,
+                    })
                 })
-
-               
+                    .then(resp => resp.json())
+                    .then(function(updatedOreoObj) {
+                        makeAnOreoComment(newCommentObj)
+                        averageUserRating.innerText = `User Rating: ${updatedOreoObj.avgRating.toFixed(1)}`
+                    })
             })
-        })
-    })
-
-    commentForm.addEventListener("submit", function(evt){
-        evt.preventDefault()
-        let ID = currentOreo.id
-        fetch(`http://localhost:3000/comments`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                oreoId: ID,
-                name: nameValue.value,
-                comment: commentValue.value,
-                rating: userRating.value
-            })
-        })
-        .then(res => res.json())
-        .then(function(commentObj){
-           makeAnOreoComment(commentObj)
-        })
-
-
 
     })
+})
 
-    function makeAnOreoComment(commentObj){
-        let blankLi = document.createElement("li")
-        blankLi.classList = "user-comment"  
-        blankLi.innerText = `${commentObj.name} - Rating: ${commentObj.rating}`
-        let blankP = document.createElement("p")
-        blankP.innerText = commentObj.comment
+// Append to DOM helper function
+function makeAnOreoComment(commentObj){
+    let blankLi = document.createElement("li")
+    blankLi.classList = "user-comment"  
+    blankLi.innerText = `${commentObj.name} - Rating: ${commentObj.rating}`
+    let blankP = document.createElement("p")
+    blankP.innerText = commentObj.comment
 
-        blankLi.append(blankP)
-        commentList.append(blankLi)
-    }
+    blankLi.append(blankP)
+    commentList.append(blankLi)
+}
+
+
+    //             sum = 0
+    //             oreoMainImg.src = oreoObj.image
+    //             oreoMainImg.alt = oreoObj.flavor
+    //             commentForm.dataset.id = oreoObj.id
+    //             expertRatingH2.innerText = `Expert Rating: ${oreoObj.expertRating}`
+    //             currentOreo = oreoObj
+    //             commentList.innerHTML = ""
+    //             oreoObj.comments.forEach(function(comment){
+    //                 sum = sum + parseInt(comment.rating, 10)
