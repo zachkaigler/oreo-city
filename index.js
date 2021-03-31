@@ -18,14 +18,16 @@ fetch("http://localhost:3000/oreos?_embed=comments")
     .then(resp => resp.json())
     .then(function(oreoArray) {
         oreoArray.forEach(function(oreoObj) {
-            let oreoSpan = document.createElement("span")
-                oreoSpan.classList = "oreo-bar"
+            let oreoDiv = document.createElement("div")
+                oreoDiv.classList = "oreo-bar"
+            let oreoLabel = document.createElement("p")
+            oreoLabel.innerText = `${oreoObj.flavor} - ${oreoObj.expertRating}`
             let oreoImg = document.createElement("img")
                 oreoImg.src = oreoObj.image
                 oreoImg.alt = oreoObj.flavor
             
-            oreoSpan.append(oreoImg)
-            oreoBar.append(oreoSpan)
+            oreoDiv.append(oreoImg, oreoLabel)
+            oreoBar.append(oreoDiv)
 
             // Click functionality
             oreoImg.addEventListener("click", function() {
@@ -101,9 +103,24 @@ function makeAnOreoComment(commentObj){
     blankLi.innerText = `${commentObj.name} - Rating: ${commentObj.rating}`
     let blankP = document.createElement("p")
     blankP.innerText = commentObj.comment
-
-    blankLi.append(blankP)
+    let deleteButton = document.createElement("button")
+    deleteButton.innerText = "X"
+    deleteButton.classList = "delete-button"
+    blankLi.append(blankP, deleteButton)
     commentList.append(blankLi)
+
+    deleteButton.addEventListener("click", function(){
+        fetch(`http://localhost:3000/comments/${commentObj.id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(res => res.json())
+        .then(function(emptyObj){
+            blankLi.remove()
+        })
+    })
 }
 
 

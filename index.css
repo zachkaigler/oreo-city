@@ -4,15 +4,54 @@ body {
 
 div#oreo-header.header {
     text-align: center;
-    background-color: white;
-    height: 200px;
+    background-color:#A4CEEA;
+    height: 165px;
     overflow-x: scroll;
     overflow-y: hidden;
     white-space: nowrap;
     white-space: nowrap;
+    border: 3px solid #314998; 
 }
 
 div#oreo-header.header img {
-    height: 180px;
+    height: 95px;
+    line-height: 200px;
+    border-radius: 50%;
     /* float: left; */
+}
+
+.oreo-bar {
+    display: inline-block;
+    margin: 10px
+}
+
+#banner {
+    height: 220px;
+    background-image: url("images/Oreo-HD-Wallpaper.jpg");
+    background-size: cover;
+    background-position-y: center;
+}
+
+div.oreo-bar p {
+    font-size: small;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* width */
+::-webkit-scrollbar {
+    height: 7px;
+  }
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #76a5c4;
+  }
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #5a75cf;
+  }
+  /* Handle on hover */
+  
+div#banner img {
+    height: 220px;
 }
