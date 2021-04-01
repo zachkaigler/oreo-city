@@ -1,6 +1,6 @@
 // Stable elements
 let oreoBar = document.querySelector("div#oreo-header.header")
-let oreoMainImg = document.querySelector("img#placeholder-img")
+// let oreoMainImg = document.querySelector("img#placeholder-img")
 let commentForm = document.querySelector("form#comment-form")
 let expertRatingH2 = document.querySelector("h3#expert-rating")
 let commentValue = document.querySelector("textarea#comment")
@@ -9,6 +9,7 @@ let commentList = document.querySelector("ul#comment-list")
 let userRating = document.querySelector("input#rating")
 let averageUserRating = document.querySelector("h3#user-rating")
 let contentContainer = document.querySelector("div#main-content")
+let ratingsCard = "div#ratings-card"
 
 // Global Variables
 let currentOreo = {}
@@ -34,8 +35,11 @@ fetch("http://localhost:3000/oreos?_embed=comments")
             
             // Click functionality
             oreoImg.addEventListener("click", function() {
-                oreoMainImg.src = oreoObj.image
-                oreoMainImg.alt = oreoObj.flavor
+                let oreoMainImg = document.createElement("img")
+                    oreoMainImg.src = oreoObj.image
+                    oreoMainImg.alt = oreoObj.flavor
+                    oreoMainImg.id = "placeholder-img"
+                contentContainer.insertAdjacentElement('afterbegin', oreoMainImg)
                 commentForm.dataset.id = oreoObj.id
                 expertRatingH2.innerText = `Expert: ${oreoObj.expertRating}`
                 currentOreo = oreoObj
