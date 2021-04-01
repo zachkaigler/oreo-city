@@ -13,29 +13,35 @@
     <div id = "banner">
         <img src="images/oreo-city-logo-temp.png" alt = "oreo-city-logo">
     </div>
+
     <div id = "oreo-header" class = "header">
         <!-- Append oreo pics here -->
     </div>
 
-    <h1>Welcome to Oreo City</h1>
-
     <div id = "main-content" class = "oreo-info">
        <img id="placeholder-img">
-    </div>
-
-    <h2 id = "expert-rating">Expert Rating: </h2>
-    <h2 id = "user-rating">User Rating: </h2>
-    <form id = "comment-form" data-id = "Insert Oreo Id">
-        <input type = "text" id = "name" name = "name" placeholder = "Name">
-        <input type = "text" id = "comment" name = "comment" placeholder = "Comment">
-        <input type = "number" id = "rating" name = "rating" min = "1" max = "10">
-        <input type = "submit" value = "Post">
-    </form>
-    <div id="comment-container">
-        <ul id= "comment-list">
-
-        </ul>
-
+       
+       <div id = "ratings-card">
+           <h1 id = "ratings">Ratings</h1>
+           <h3 id = "expert-rating">Expert</h3>
+           <h3 id = "user-rating">User</h3>
+        </div>
+        <form id = "comment-form" data-id = "Insert Oreo Id">
+            <input type = "text" class = "upper-input" id = "name" name = "name" placeholder = "Name" required>
+            <label for = "rating">Rating:</label>
+            <input type = "number" id = "rating" class = "upper-input" name = "rating" min = "1" max = "10" size="20" required>
+            <br>
+            <textarea rows="5" cols="40" name="comment" form="usrform" id = "comment" placeholder = "Comment" required></textarea>            
+            <!-- <input type = "text" id = "comment" name = "comment" placeholder = "Comment" width = "50px" height = "200px"> -->
+            <br>
+            <input type = "submit" value = "Post">
+        </form>
+        <div id="comment-container">
+            <ul id= "comment-list">
+                
+            </ul>
+            
+        </div>
     </div>
 </body>
 </html>

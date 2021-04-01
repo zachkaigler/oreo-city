@@ -1,3 +1,8 @@
+@font-face {
+    font-family: oreoFont;
+    src: url(fonts/oreos.ttf)
+}
+
 body {
     text-align: center;
 }
@@ -17,6 +22,8 @@ div#oreo-header.header img {
     height: 95px;
     line-height: 200px;
     border-radius: 50%;
+    border: solid;
+    border-color: #314998;
     /* float: left; */
 }
 
@@ -54,4 +61,34 @@ div.oreo-bar p {
   
 div#banner img {
     height: 220px;
+}
+
+img#placeholder-img {
+    height: 250px;
+    margin-top: 10px;
+}
+
+.upper-input {
+    /* margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 5px; */
+    margin: 5px 10px;
+}
+
+#name {
+    margin-right: 79px;
+}
+
+h3#expert-rating, h3#user-rating {
+    font-family: Arial, Helvetica, sans-serif;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+h1#ratings {
+    font-family: oreoFont;
+}
+
+form {
+    margin-top: 20px;
 }

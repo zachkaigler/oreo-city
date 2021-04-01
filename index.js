@@ -2,12 +2,13 @@
 let oreoBar = document.querySelector("div#oreo-header.header")
 let oreoMainImg = document.querySelector("img#placeholder-img")
 let commentForm = document.querySelector("form#comment-form")
-let expertRatingH2 = document.querySelector("h2#expert-rating")
-let commentValue= document.querySelector("input#comment")
-let nameValue= document.querySelector("input#name")
+let expertRatingH2 = document.querySelector("h3#expert-rating")
+let commentValue = document.querySelector("textarea#comment")
+let nameValue = document.querySelector("input#name")
 let commentList = document.querySelector("ul#comment-list")
 let userRating = document.querySelector("input#rating")
-let averageUserRating = document.querySelector("h2#user-rating")
+let averageUserRating = document.querySelector("h3#user-rating")
+let contentContainer = document.querySelector("div#main-content")
 
 // Global Variables
 let currentOreo = {}
@@ -21,30 +22,32 @@ fetch("http://localhost:3000/oreos?_embed=comments")
             let oreoDiv = document.createElement("div")
                 oreoDiv.classList = "oreo-bar"
             let oreoLabel = document.createElement("p")
-            oreoLabel.innerText = `${oreoObj.flavor} - ${oreoObj.expertRating}`
+                oreoLabel.innerText = `${oreoObj.flavor} - ${oreoObj.expertRating}`
             let oreoImg = document.createElement("img")
                 oreoImg.src = oreoObj.image
                 oreoImg.alt = oreoObj.flavor
+                oreoImg.classList = "main-oreo-img"
             
             oreoDiv.append(oreoImg, oreoLabel)
             oreoBar.append(oreoDiv)
 
+            
             // Click functionality
             oreoImg.addEventListener("click", function() {
                 oreoMainImg.src = oreoObj.image
                 oreoMainImg.alt = oreoObj.flavor
                 commentForm.dataset.id = oreoObj.id
-                expertRatingH2.innerText = `Expert Rating: ${oreoObj.expertRating}`
+                expertRatingH2.innerText = `Expert: ${oreoObj.expertRating}`
                 currentOreo = oreoObj
                 commentList.innerHTML = ""
                 
                 if (oreoObj.avgRating !== 0) {
-                    averageUserRating.innerText = `User Rating: ${oreoObj.avgRating.toFixed(1)}`
+                    averageUserRating.innerText = `User: ${oreoObj.avgRating.toFixed(1)}`
                     oreoObj.comments.forEach(function(commentObj){
                         makeAnOreoComment(commentObj)
                     })
                 } else {
-                    averageUserRating.innerText = `User Rating: N/A`
+                    averageUserRating.innerText = `User: N/A`
                 }
             })
         })
@@ -96,16 +99,18 @@ commentForm.addEventListener("submit", function(evt){
     })
 })
 
+
+
 // Append to DOM helper function
 function makeAnOreoComment(commentObj){
     let blankLi = document.createElement("li")
-    blankLi.classList = "user-comment"  
-    blankLi.innerText = `${commentObj.name} - Rating: ${commentObj.rating}`
+        blankLi.classList = "user-comment"  
+        blankLi.innerText = `${commentObj.name} - Rating: ${commentObj.rating}`
     let blankP = document.createElement("p")
-    blankP.innerText = commentObj.comment
+        blankP.innerText = commentObj.comment
     let deleteButton = document.createElement("button")
-    deleteButton.innerText = "X"
-    deleteButton.classList = "delete-button"
+        deleteButton.innerText = "X"
+        deleteButton.classList = "delete-button"
     blankLi.append(blankP, deleteButton)
     commentList.append(blankLi)
 
@@ -123,13 +128,4 @@ function makeAnOreoComment(commentObj){
     })
 }
 
-
-    //             sum = 0
-    //             oreoMainImg.src = oreoObj.image
-    //             oreoMainImg.alt = oreoObj.flavor
-    //             commentForm.dataset.id = oreoObj.id
-    //             expertRatingH2.innerText = `Expert Rating: ${oreoObj.expertRating}`
-    //             currentOreo = oreoObj
-    //             commentList.innerHTML = ""
-    //             oreoObj.comments.forEach(function(comment){
-    //                 sum = sum + parseInt(comment.rating, 10)
+   
