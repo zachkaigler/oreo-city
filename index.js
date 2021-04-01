@@ -47,7 +47,9 @@ fetch("http://localhost:3000/oreos?_embed=comments")
                     makeAnOreoComment(commentObj)
                 })
                 
-                if (oreoObj.avgRating !== 0) {
+                if (currentOreo.comments.length === 0) {
+                    averageUserRating.innerText = `User: N/A`
+                } else if (oreoObj.avgRating !== 0) {
                     averageUserRating.innerText = `User: ${oreoObj.avgRating.toFixed(1)}`
                 } else {
                     averageUserRating.innerText = `User: N/A`
@@ -99,7 +101,7 @@ commentForm.addEventListener("submit", function(evt){
                         commentForm.reset()
                         commentValue.value = ""
                         makeAnOreoComment(newCommentObj)
-                        averageUserRating.innerText = `User Rating: ${updatedOreoObj.avgRating.toFixed(1)}`
+                        averageUserRating.innerText = `User: ${updatedOreoObj.avgRating.toFixed(1)}`
                         currentOreo.avgRating = updatedOreoObj.avgRating
                         currentOreo.comments = [...currentOreo.comments, newCommentObj]
                     })
@@ -122,6 +124,7 @@ function makeAnOreoComment(commentObj){
     blankLi.append(blankP, deleteButton)
     commentList.append(blankLi)
 
+    // Delete button functionality
     deleteButton.addEventListener("click", function(){
         fetch(`http://localhost:3000/comments/${commentObj.id}`, {
             method: "DELETE",
@@ -137,6 +140,30 @@ function makeAnOreoComment(commentObj){
                 .then (resp => resp.json())
                 .then (function (oreoWithoutComment) {
                     currentOreo.comments = oreoWithoutComment.comments
+                    
+                    sum = 0
+                    oreoWithoutComment.comments.forEach(function(comment) {
+                        sum = sum + parseInt(comment.rating, 10)
+                    })
+                    
+                    if (sum !== 0) {
+                        fetch (`http://localhost:3000/oreos/${currentOreo.id}`, {
+                            method: "PATCH",
+                            headers: {
+                                'content-type': 'application/json' 
+                            },
+                            body: JSON.stringify({
+                                avgRating: sum / oreoWithoutComment.comments.length,
+                            })
+                        })
+                            .then(resp => resp.json())
+                            .then(function(updatedOreoObj) {
+                                averageUserRating.innerText = `User: ${updatedOreoObj.avgRating.toFixed(1)}`
+                                currentOreo.avgRating = updatedOreoObj.avgRating
+                            })
+                    } else {
+                        averageUserRating.innerText = `User: N/A`
+                    }
                 })
         })
     })
