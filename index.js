@@ -1,6 +1,5 @@
 // Stable elements
 let oreoBar = document.querySelector("div#oreo-header.header")
-// let oreoMainImg = document.querySelector("img#placeholder-img")
 let commentForm = document.querySelector("form#comment-form")
 let expertRatingH2 = document.querySelector("h3#expert-rating")
 let commentValue = document.querySelector("textarea#comment")
@@ -9,7 +8,7 @@ let commentList = document.querySelector("ul#comment-list")
 let userRating = document.querySelector("input#rating")
 let averageUserRating = document.querySelector("h3#user-rating")
 let contentContainer = document.querySelector("div#main-content")
-let ratingsCard = "div#ratings-card"
+let mainImgContainer = document.querySelector("div#main-img-container")
 
 // Global Variables
 let currentOreo = {}
@@ -31,25 +30,25 @@ fetch("http://localhost:3000/oreos?_embed=comments")
             
             oreoDiv.append(oreoImg, oreoLabel)
             oreoBar.append(oreoDiv)
-
             
             // Click functionality
             oreoImg.addEventListener("click", function() {
+                currentOreo = oreoObj
+                mainImgContainer.innerHTML = ""
                 let oreoMainImg = document.createElement("img")
                     oreoMainImg.src = oreoObj.image
                     oreoMainImg.alt = oreoObj.flavor
                     oreoMainImg.id = "placeholder-img"
-                contentContainer.insertAdjacentElement('afterbegin', oreoMainImg)
+                mainImgContainer.append(oreoMainImg)
                 commentForm.dataset.id = oreoObj.id
                 expertRatingH2.innerText = `Expert: ${oreoObj.expertRating}`
-                currentOreo = oreoObj
                 commentList.innerHTML = ""
+                oreoObj.comments.forEach(function(commentObj){
+                    makeAnOreoComment(commentObj)
+                })
                 
                 if (oreoObj.avgRating !== 0) {
                     averageUserRating.innerText = `User: ${oreoObj.avgRating.toFixed(1)}`
-                    oreoObj.comments.forEach(function(commentObj){
-                        makeAnOreoComment(commentObj)
-                    })
                 } else {
                     averageUserRating.innerText = `User: N/A`
                 }
@@ -101,13 +100,13 @@ commentForm.addEventListener("submit", function(evt){
                         commentValue.value = ""
                         makeAnOreoComment(newCommentObj)
                         averageUserRating.innerText = `User Rating: ${updatedOreoObj.avgRating.toFixed(1)}`
+                        currentOreo.avgRating = updatedOreoObj.avgRating
+                        currentOreo.comments = [...currentOreo.comments, newCommentObj]
                     })
             })
 
     })
 })
-
-
 
 // Append to DOM helper function
 function makeAnOreoComment(commentObj){
@@ -133,6 +132,12 @@ function makeAnOreoComment(commentObj){
         .then(res => res.json())
         .then(function(emptyObj){
             blankLi.remove()
+
+            fetch(`http://localhost:3000/oreos/${currentOreo.id}?_embed=comments`)
+                .then (resp => resp.json())
+                .then (function (oreoWithoutComment) {
+                    currentOreo.comments = oreoWithoutComment.comments
+                })
         })
     })
 }
