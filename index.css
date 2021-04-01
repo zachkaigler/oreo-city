@@ -5,6 +5,10 @@
 
 body {
     text-align: center;
+    
+    box-sizing: border-box;
+    background-color: #d3edff;
+    
 }
 
 div#oreo-header.header {
@@ -88,7 +92,61 @@ h3#expert-rating, h3#user-rating {
 h1#ratings {
     font-family: oreoFont;
 }
-
-form {
+form{
     margin-top: 20px;
+}
+
+form input, form textarea{
+   
+    border: 2px solid #314998;
+    background-color: #d3edff;
+    color: #314998;
+    
+}
+div#comment-container{
+    margin-left: 0px;
+    
+}
+ul{
+    list-style: none;
+    display: flex;
+    margin: auto;
+    padding-left: 0px;
+    flex-flow: row wrap;
+    text-align: center;
+}
+
+li.user-comment {
+    background-color: #4B3730;
+    border: 3px solid black;
+    border-radius: 20%;
+    flex-flow: row wrap;
+    width: 223px;
+    margin: 10px;
+    color: white;
+    text-align: center;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    padding: 10px 0px;
+}
+li p {
+    background-color: white;
+    color: #4B3730;
+    padding: 10px 0px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+div#page-container {
+    width: 750px;
+    text-align:center;
+    align-content: center;
+    margin: auto;
+}
+div#main-content{
+    background-color: white;
+   
+}
+button.delete-button {
+    border: 1.5px solid black;
+    border-radius: 100%;
+    background-color: #76a5c4;
+    color: white;
 }

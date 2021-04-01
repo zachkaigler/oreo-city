@@ -56,6 +56,7 @@ fetch("http://localhost:3000/oreos?_embed=comments")
 // Form submit functionality
 commentForm.addEventListener("submit", function(evt){
     evt.preventDefault()
+    
     let ID = currentOreo.id
     fetch(`http://localhost:3000/comments`, {
         method: 'POST',
@@ -71,6 +72,7 @@ commentForm.addEventListener("submit", function(evt){
     })
     .then(res => res.json())
     .then(function(newCommentObj){
+
         // Calculate average user score and update server + DOM
         fetch('http://localhost:3000/oreos?_embed=comments')
             .then (resp => resp.json())
@@ -91,6 +93,8 @@ commentForm.addEventListener("submit", function(evt){
                 })
                     .then(resp => resp.json())
                     .then(function(updatedOreoObj) {
+                        commentForm.reset()
+                        commentValue.value = ""
                         makeAnOreoComment(newCommentObj)
                         averageUserRating.innerText = `User Rating: ${updatedOreoObj.avgRating.toFixed(1)}`
                     })
@@ -108,6 +112,7 @@ function makeAnOreoComment(commentObj){
         blankLi.innerText = `${commentObj.name} - Rating: ${commentObj.rating}`
     let blankP = document.createElement("p")
         blankP.innerText = commentObj.comment
+        blankP.classList = "real-comment"
     let deleteButton = document.createElement("button")
         deleteButton.innerText = "X"
         deleteButton.classList = "delete-button"
